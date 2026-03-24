@@ -37,9 +37,7 @@ jobs:
           
           if [ -n "$use_worker_assets" ]; then
             cd frontend/
-            echo "=========1=========="
             pnpm install --no-frozen-lockfile
-            echo "=========2=========="
             if [ -n "$use_worker_assets_with_telegram" ]; then
               echo "Building with telegram pages"
               pnpm build:telegram:pages
@@ -49,23 +47,19 @@ jobs:
             fi
             cd ..
           fi
-          echo "=========3=========="
           export debug_mode=${{ secrets.DEBUG_MODE }}
           export use_mail_wasm_parser=${{ secrets.BACKEND_USE_MAIL_WASM_PARSER }}
           
           cd worker/
           # ✅ 修复核心：使用环境变量写入，避免 Shell 解析特殊字符
           printf '%s\n' "$WRANGLER_TOML_CONTENT" > wrangler.toml
-          echo "=========4=========="
           pnpm install --no-frozen-lockfile
-          echo "=========5=========="
           if [ -n "$use_mail_wasm_parser" ]; then
             echo "Using mail-parser-wasm-worker"
             pnpm add mail-parser-wasm-worker
             git apply ../.github/config/mail-parser-wasm-worker.patch
             echo "Applied mail-parser-wasm-worker patch"
           fi
-          echo "=========6=========="
           if [ "$debug_mode" = "true" ]; then
             pnpm run deploy
           else
@@ -76,7 +70,6 @@ jobs:
                 exit $code
             fi
           fi
-          echo "=========7=========="
           echo "Deployed for tag ${{ github.ref_name }}"
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
