@@ -37,7 +37,9 @@ jobs:
           
           if [ -n "$use_worker_assets" ]; then
             cd frontend/
+            echo "=========1=========="
             pnpm install --no-frozen-lockfile
+            echo "=========2=========="
             if [ -n "$use_worker_assets_with_telegram" ]; then
               echo "Building with telegram pages"
               pnpm build:telegram:pages
@@ -47,7 +49,7 @@ jobs:
             fi
             cd ..
           fi
-
+          echo "=========3=========="
           export debug_mode=${{ secrets.DEBUG_MODE }}
           export use_mail_wasm_parser=${{ secrets.BACKEND_USE_MAIL_WASM_PARSER }}
           
